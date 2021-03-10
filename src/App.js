@@ -16,6 +16,7 @@ function App() {
 
 	const [socket] = useState(connetctSocketServer());
 	const [online, setOnline] = useState(false);
+	const [bands, setBands] = useState([])
 
 	useEffect(() => {
 		setOnline(socket.connected)
@@ -26,15 +27,23 @@ function App() {
 			setOnline(true)
 		})		
 	}, [socket])
+
 	useEffect(() => {
 		socket.on('disconnect',()=>{
 			setOnline(false)
 		})		
 	}, [socket])
 
+	useEffect(() => {
+	
+		socket.on('current-bands',(data)=>{
+			setBands(data)
+		})		
+	}, [socket])
+
     return (
         <div className="container">
-            <div class="alert">
+            <div className="alert">
 				<p>
 					Service status:
 					{
@@ -46,11 +55,11 @@ function App() {
 			</div>
 			<h1>BandNames</h1>
 			<hr/>
-			<div class="row">
-				<div class="col-8">
-					<BandList/>
+			<div className="row">
+				<div className="col-8">
+					<BandList data={bands}/>
 				</div>
-				<div class="col-4">
+				<div className="col-4">
 					<BandAdd/>
 				</div>
 			</div>
