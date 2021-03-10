@@ -8,6 +8,21 @@ export const BandList = ({data}) => {
         setBands(data)
     }, [data])
 
+    const cambiNombre=(event, id)=>{
+        const nuevoNombre = event.target.value;
+
+        setBands(bands=>bands.map(band=>{
+            if (band.id === id) {
+                band.name = nuevoNombre;
+            }
+            return band;
+        }))
+    }
+
+    const perdioFoco = (id, nombre)=>{
+        console.log(id, nombre);
+    }
+
     const crearRows = () => {
         return (
             bands.map(band =>(
@@ -20,6 +35,8 @@ export const BandList = ({data}) => {
                             type="text"
                             className="form-control"
                             value={band.name}
+                            onChange={(event)=>{cambiNombre(event, band.id)}}
+                            onBlur={()=>{perdioFoco (band.id, band.name)}}
                         />
                     </td>
                     <td>
