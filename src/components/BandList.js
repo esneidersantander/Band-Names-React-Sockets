@@ -1,14 +1,19 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { SocketContext } from '../context/SocketContext';
 
-export const BandList = ({data, votar, borrar, cambiarNombre}) => {
+export const BandList = () => {
 
-    const [bands, setBands] = useState(data);
+    const {socket} = useContext(SocketContext);	
+    const [bands, setBands] = useState([]);
 
     useEffect(() => {
-        setBands(data)
-    }, [data])
+        socket.on('current-bands',(data)=>{
+			setBands(data)
+		})	
+        return ()=> socket.off('current-bands');
+    }, [socket])
 
-    const cambiNombre=(event, id)=>{
+    const cambiarNombre=(event, id)=>{
         const nuevoNombre = event.target.value;
 
         setBands(bands=>bands.map(band=>{
@@ -20,8 +25,16 @@ export const BandList = ({data, votar, borrar, cambiarNombre}) => {
     }
 
     const perdioFoco = (id, nombre)=>{
-        cambiarNombre(id, nombre);
+        socket.emit('cambiar-nombre-banda', {id, nombre});
     }
+
+    const votar = (id)=>{
+		socket.emit('votar-banda', id);
+	}
+
+	const borrar = (id)=>{
+		socket.emit('borrar-banda', id);
+	}
 
     const crearRows = () => {
         return (
@@ -40,7 +53,7 @@ export const BandList = ({data, votar, borrar, cambiarNombre}) => {
                             type="text"
                             className="form-control"
                             value={band.name}
-                            onChange={(event)=>{cambiNombre(event, band.id)}}
+                            onChange={(event)=>{cambiarNombre(event, band.id)}}
                             onBlur={()=>{perdioFoco (band.id, band.name)}}
                         />
                     </td>

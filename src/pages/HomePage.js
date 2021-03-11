@@ -9,30 +9,6 @@ function HomePage() {
 
 	const {online} = useContext(SocketContext);	
 	
-/* 	const {socket, online}=useSocket('http://localhost:8080/')
-
-	const [bands, setBands] = useState([])
-
-
-	useEffect(() => {
-	
-		socket.on('current-bands',(data)=>{
-			setBands(data)
-		})		
-	}, [socket])
-
-	const votar = (id)=>{
-		socket.emit('votar-banda', id);
-	}
-
-	const borrar = (id)=>{
-		socket.emit('borrar-banda', id);
-	}
-	const cambiarNombre = (id, nombre)=>{
-		socket.emit('cambiar-nombre-banda', {id, nombre});
-	} */
-
-
     return (
         <div className="container">
             <div className="alert">
@@ -49,15 +25,10 @@ function HomePage() {
 			<hr/>
 			<div className="row">
 				<div className="col-8">
-{/* 					<BandList 
-						data={bands} 
-						votar={votar} 
-						borrar={borrar}
-						cambiarNombre={cambiarNombre}
-					/> */}
+					<BandList />
 				</div>
 				<div className="col-4">
-					{/* <BandAdd /> */}
+					<BandAdd />
 				</div>
 			</div>
         </div>
