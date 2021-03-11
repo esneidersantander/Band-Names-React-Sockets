@@ -1,38 +1,15 @@
 import { useEffect, useState } from "react";
-import { io } from "socket.io-client";
 import { BandAdd } from "./components/BandAdd";
 import { BandList } from "./components/BandList";
+import { useSocket } from "./hooks/useSockets";
 
-const connetctSocketServer =()=>{
-	const socket = io('http://localhost:8080',
-	{
-		transports:['websocket']
-	});
-	return socket;
-}
 
 
 function App() {
 
-	const [socket] = useState(connetctSocketServer());
-	const [online, setOnline] = useState(false);
+	const {socket, online}=useSocket('http://localhost:8080/')
 	const [bands, setBands] = useState([])
 
-	useEffect(() => {
-		setOnline(socket.connected)
-	}, [socket])
-
-	useEffect(() => {
-		socket.on('connect',()=>{
-			setOnline(true)
-		})		
-	}, [socket])
-
-	useEffect(() => {
-		socket.on('disconnect',()=>{
-			setOnline(false)
-		})		
-	}, [socket])
 
 	useEffect(() => {
 	
@@ -50,9 +27,6 @@ function App() {
 	}
 	const cambiarNombre = (id, nombre)=>{
 		socket.emit('cambiar-nombre-banda', {id, nombre});
-	}
-	const crearBanda = (nombre)=>{
-		socket.emit('nueva-banda', {nombre});
 	}
 
 
@@ -80,9 +54,7 @@ function App() {
 					/>
 				</div>
 				<div className="col-4">
-					<BandAdd
-						crearBanda={crearBanda}	
-					/>
+					<BandAdd />
 				</div>
 			</div>
         </div>
